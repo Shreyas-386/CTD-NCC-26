@@ -3,6 +3,8 @@ import api from "../api/axios";
 import { FaArrowLeft, FaArrowRight, FaCrown, FaTrophy, FaMedal } from "react-icons/fa";
 import { GiGreekTemple, GiLaurelCrown, GiScrollQuill } from "react-icons/gi";
 import Navbar from "../components/Navbar";
+import Backdrop from "../components/Backdrop";
+import { Slashes } from "../components/NccLogo";
 const fetchStudents = async () => {
   try {
     const response = await api.get(`/leaderboard/`);
@@ -65,165 +67,90 @@ function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-[#2a1f33] via-[#4b3140] to-[#9b6b5e] box-border overflow-x-hidden relative">
-      {/* Decorative background elements
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 border-2 border-[#FFE7A3]/10 rounded-full" />
-        <div className="absolute bottom-20 right-10 w-48 h-48 border-2 border-[#E6B65C]/10 rounded-full" />
-        <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-r from-[#FFE7A3]/5 to-transparent rounded-full blur-3xl" />
-      </div> */}
+    <div className="min-h-screen w-full flex flex-col overflow-x-hidden relative font-poppins">
+      <Backdrop tone="navy" />
 
       {/* Navbar */}
-      <nav className="relative z-10">
-        <Navbar />
+      <nav className="relative z-20 shrink-0">
+        <Navbar variant="gold" />
       </nav>
 
-      {/* Title Section */}
-      <div className="relative z-10 mt-[2.1%] w-full text-center">
-        <h1
-          className="
-            text-4xl md:text-5xl lg:text-[50px] 
-            font-stranger
-            font-extrabold 
-            tracking-widest
-            bg-gradient-to-b from-[#FFE7A3] via-[#E6B65C] to-[#B8832F]
-            bg-clip-text text-transparent
-            [-webkit-text-stroke:1px_#1B1F4A]
-            drop-shadow-[4px_4px_0_#0D1026]
-            inline-block
-            relative
-            px-8 py-4 font-stranger
-          "
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 flex flex-col py-8 sm:py-10">
+        {/* Title Section */}
+        <div className="w-full flex items-center justify-center gap-3 sm:gap-5">
+          <Slashes className="w-8 h-8 sm:w-11 sm:h-11" />
+          <h1 className="font-exo text-3xl sm:text-4xl lg:text-5xl leading-tight font-extrabold tracking-wide text-[#f3f1ec] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+            LEADERBOARD
+          </h1>
+          <Slashes className="w-8 h-8 sm:w-11 sm:h-11" />
+        </div>
 
-        >
-          {/* <GiGreekTemple className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 text-[#FFE7A3]/50" /> */}
-          LEADERBOARD
-          {/* <GiScrollQuill className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 text-[#FFE7A3]/50" /> */}
-        </h1>
-      </div>
-
-      {/* Leaderboard Container */}
-      <div className="relative z-10 mt-10 w-[90%] lg:w-[85%] min-h-[65%] mx-auto">
-        {/* Decorative corner elements */}
-        <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-[#FFE7A3]/30 rounded-tl-lg" />
-        <div className="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-[#FFE7A3]/30 rounded-tr-lg" />
-        <div className="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-[#FFE7A3]/30 rounded-bl-lg" />
-        <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-[#FFE7A3]/30 rounded-br-lg" />
-
-        {/* Main Table Container */}
-        <div
-          className="
-            border-2 rounded-3xl 
-            border-[#c29673]
-            bg-[#1a1625]/90 
-            backdrop-blur-md 
-            flex flex-col 
-            shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_30px_rgba(202,150,115,0.2)]
-            overflow-hidden
-            relative
-          "
-        >
-
-
-
+        {/* Leaderboard Container */}
+        <div className="mt-6 sm:mt-8 flex flex-col rounded-2xl p-3 sm:p-5 bg-[#0d1a36]/70 border border-[#2b3c66]/70 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
           {/* Table Body with scroll */}
-          <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-[#c29673] scrollbar-track-transparent">
-            <table className="w-full table-fixed text-center text-white tracking-wide">
+          <div className="overflow-x-auto ncc-scroll rounded-xl border border-[#2b3c66]/70">
+            <table className="w-full min-w-[640px] table-fixed text-center text-[#e7e9f0] tracking-wide">
 
-              <thead className="text-base md:text-lg font-bold sticky top-0 bg-[#1a1625] z-10">
-                <tr className="border-b-2 border-[#c29673]">
-                  <th className="py-5 w-[10%] relative">
-                    <span className="flex items-center justify-center gap-2 font-play">
-                      RANK
-                    </span>
-                  </th>
-                  <th className="w-[22%] font-play">USERNAME</th>
-                  <th className="w-[7%] font-play">Q1</th>
-                  <th className="w-[7%] font-play">Q2</th>
-                  <th className="w-[7%] font-play">Q3</th>
-                  <th className="w-[7%] font-play">Q4</th>
-                  <th className="w-[13%] font-play">TIME</th>
-                  <th className="w-[13%] font-play">SCORE</th>
+              <thead className="text-[11px] sm:text-xs font-semibold sticky top-0 bg-[#0f1d3d] z-10">
+                <tr className="border-b-2 border-[#e8b57d]/80">
+                  <th className="py-4 sm:py-5 w-[10%]">RANK</th>
+                  <th className="w-[22%] text-left pl-4">USERNAME</th>
+                  <th className="w-[8%]">Q1</th>
+                  <th className="w-[8%]">Q2</th>
+                  <th className="w-[8%]">Q3</th>
+                  <th className="w-[8%]">Q4</th>
+                  <th className="w-[14%]">TIME</th>
+                  <th className="w-[12%] text-[#e8b57d]">SCORE</th>
                 </tr>
               </thead>
 
               <tbody>
                 {currentData.map((student, idx) => {
                   const rank = startIndex + idx + 1;
-                  const isTop3 = rank <= 3;
+                  const isFirst = rank === 1;
 
                   return (
                     <tr
                       key={student.username}
                       className={`
-              relative
-              text-base md:text-lg 
-              transition-all duration-300 
-              hover:bg-gradient-to-r hover:from-[#c29673]/20 hover:to-transparent
-              cursor-pointer
-              group
-              ${isTop3 ? 'bg-gradient-to-r from-[#FFE7A3]/5 to-transparent' : ''}
-            `}
+                        text-xs sm:text-sm
+                        transition-colors duration-200
+                        ${idx % 2 === 0 ? "bg-[#13244b]/70" : "bg-transparent"}
+                        ${hoveredRow === rank ? "!bg-[#1a2f5e]/80" : ""}
+                      `}
                       onMouseEnter={() => setHoveredRow(rank)}
                       onMouseLeave={() => setHoveredRow(null)}
                     >
                       {/* Rank */}
-                      <td className="py-5 font-semibold relative">
-                        <div className="flex items-center justify-center gap-2 ">
-                          <span className={`
-                  ${rank === 1 ? 'text-[#FFD700] font-play' :
-                              rank === 2 ? 'text-[#C0C0C0]' :
-                                rank === 3 ? 'text-[#CD7F32]' :
-                                  'text-[#FFE7A3]'}
-                  font-bold text-lg
-                `}>
+                      <td className="py-4 sm:py-5 font-semibold">
+                        <div className="flex items-center justify-center gap-2">
+                          {isFirst && <FaCrown className="text-[#e8b57d] text-base" />}
+                          <span className={isFirst ? "text-[#e8b57d]" : "text-[#e7e9f0]"}>
                             {rank}
                           </span>
                         </div>
                       </td>
 
                       {/* Username */}
-                      <td className="font-bold">
-                        <span className={`
-                ${isTop3 ? 'text-[#FFE7A3]' : 'text-white'}
-                tracking-wider font-play
-                relative
-                inline-block
-                group-hover:scale-105
-                transition-transform duration-300 font-play
-              `}>
-                          {student.username}
-                        </span>
+                      <td className="text-left pl-4 font-semibold uppercase truncate">
+                        {student.username}
                       </td>
 
                       {/* Scores */}
                       {student.scores.map((s, i) => (
-                        <td key={i} className="text-[#e6d4b3] font-medium">
-                          <span className={`
-                  ${s > 0 ? 'text-[#e6d4b3]' : 'text-gray-500'}
-                  ${hoveredRow === rank ? 'scale-110 inline-block' : ''}
-                  transition-all duration-300 font-play
-                `}>
-                            {s}
-                          </span>
+                        <td key={i} className={s > 0 ? "text-[#e7e9f0]" : "text-[#6c7896]"}>
+                          {s}
                         </td>
                       ))}
 
                       {/* Time */}
-                      <td className="text-[#e6d4b3] text-sm font-play">
+                      <td className="text-[#e7e9f0]">
                         {student.time}
                       </td>
 
                       {/* Score */}
-                      <td className="font-bold text-xl relative">
-                        <span className={`
-                ${isTop3 ? 'text-[#FFE7A3]' : 'text-[#e6d4b3]'}
-                drop-shadow-[0_0_10px_rgba(255,231,163,0.3)]
-                group-hover:drop-shadow-[0_0_20px_rgba(255,231,163,0.6)]
-                transition-all duration-300 font-play
-              `}>
-                          {student.total}
-                        </span>
+                      <td className={`font-bold ${isFirst ? "text-[#e8b57d]" : "text-[#e7e9f0]"}`}>
+                        {student.total}
                       </td>
                     </tr>
                   );
@@ -234,72 +161,44 @@ function Leaderboard() {
 
             {/* Empty state */}
             {currentData.length === 0 && (
-              <div className="text-center py-10 text-[#e6d4b3]">
-                <GiScrollQuill className="w-12 h-12 mx-auto mb-4 opacity-50 font-play" />
+              <div className="text-center py-10 text-[#9aa7c4] font-poppins">
+                <GiScrollQuill className="w-10 h-10 mx-auto mb-3 opacity-50" />
                 <p>No participants yet</p>
               </div>
             )}
           </div>
 
           {/* Pagination */}
-          <div className="relative flex justify-center items-center gap-6 p-6 border-t border-[#c29673]/30">
+          <div className="flex justify-center items-center gap-6 pt-4 sm:pt-5">
             {/* Prev button */}
             <button
               onClick={handlePrev}
               disabled={page === 0}
-              className={`
-                relative group/btn
-                w-12 h-12 
-                flex items-center justify-center 
-                rounded-xl
-                border-2 
-                transition-all duration-300
+              className={`w-9 h-9 flex items-center justify-center rounded-md border transition-all duration-200
                 ${page === 0
-                  ? "border-[#c29673]/30 text-[#c29673]/30 cursor-not-allowed"
-                  : "border-[#FFE7A3] text-[#FFE7A3] hover:bg-[#FFE7A3] hover:text-[#0E0D40] hover:shadow-[0_0_20px_rgba(255,231,163,0.5)] hover:scale-110"
-                }
-              `}
+                  ? "border-[#2b3c66] text-[#4d5b80] cursor-not-allowed"
+                  : "border-[#4a5b85] text-[#c9d0e2] hover:border-[#e8b57d] hover:text-[#e8b57d]"
+                }`}
             >
-              <FaArrowLeft className="relative z-10" />
-              {page !== 0 && (
-                <div className="absolute inset-0 bg-[#FFE7A3]/20 rounded-xl blur-md opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-              )}
+              <FaArrowLeft className="text-xs" />
             </button>
 
             {/* Page indicator */}
-            <div className="relative">
-              <span className="text-white font-medium text-lg px-4 py-2 border border-[#c29673]/30 rounded-lg bg-[#1a1625]/50">
-                {page + 1} / {totalPages}
-              </span>
-            </div>
+            <span className="text-[#e7e9f0] font-semibold text-sm tabular-nums">
+              {page + 1} / {totalPages}
+            </span>
 
             {/* Next button */}
             <button
               onClick={handleNext}
               disabled={page === totalPages - 1}
-              className={`
-                relative group/btn
-                w-12 h-12 
-                flex items-center justify-center 
-                rounded-xl
-                border-2 
-                transition-all duration-300
-                ${page === totalPages - 1
-                  ? "border-[#c29673]/30 text-[#c29673]/30 cursor-not-allowed"
-                  : "border-[#FFE7A3] text-[#FFE7A3] hover:bg-[#FFE7A3] hover:text-[#0E0D40] hover:shadow-[0_0_20px_rgba(255,231,163,0.5)] hover:scale-110"
-                }
-              `}
+              className="ncc-gold-btn w-9 h-9 flex items-center justify-center rounded-md"
             >
-              <FaArrowRight className="relative z-10" />
-              {page !== totalPages - 1 && (
-                <div className="absolute inset-0 bg-[#FFE7A3]/20 rounded-xl blur-md opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-              )}
+              <FaArrowRight className="text-xs" />
             </button>
           </div>
         </div>
       </div>
-
-
     </div>
   );
 }

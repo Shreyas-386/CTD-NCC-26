@@ -4,39 +4,39 @@ const formatValue = (value) => String(value ?? "").replace(/\\n/g, "\n");
 
 const Sample = ({ samples = [] }) => {
   if (!samples.length) {
-    return <p className="text-[#FFFF99] font-play">No sample test cases available.</p>;
+    return <p className="text-[#9aa3b5] font-poppins text-sm">No sample test cases available.</p>;
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {samples.map((item, index) => (
         <section
           key={item.id ?? index}
-          className="rounded-lg border border-[#c29673] bg-[#1a1625]/80 p-4 font-play"
+          className="rounded-2xl ncc-glass p-5"
         >
-          <h3 className="mb-3 text-base font-semibold text-[#FFE7A3]">
-            Sample {index + 1}
+          <h3 className="mb-3 text-lg font-semibold text-[#e8b57d] font-exo">
+            Example {index + 1}
           </h3>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="min-w-0 rounded-md bg-[#0C091F]/80 p-4">
-              <strong className="text-lg text-[#CAFF33]">Input</strong>
-              <pre className="mt-2 whitespace-pre-wrap break-words text-[#FFFF99]">
+          <div className="space-y-3 font-code text-sm">
+            <div className="min-w-0">
+              <strong className="text-[#f3f4f8]">Input:</strong>
+              <pre className="mt-1 whitespace-pre-wrap break-words text-[#c6cbd8]">
                 {formatValue(item.input)}
               </pre>
             </div>
 
-            <div className="min-w-0 rounded-md bg-[#0C091F]/80 p-4">
-              <strong className="text-lg text-[#FF5733]">Output</strong>
-              <pre className="mt-2 whitespace-pre-wrap break-words text-[#FFFF99]">
+            <div className="min-w-0">
+              <strong className="text-[#f3f4f8]">Output:</strong>
+              <pre className="mt-1 whitespace-pre-wrap break-words text-[#c6cbd8]">
                 {formatValue(item.output)}
               </pre>
             </div>
 
             {item.explanation != null && item.explanation !== "" && (
-              <div className="sm:col-span-2 rounded-md bg-[#0C091F]/80 p-4">
-                <strong className="text-lg text-[#FFE7A3]">Explanation</strong>
-                <pre className="mt-2 whitespace-pre-wrap break-words text-[#FFFF99]">
+              <div className="min-w-0">
+                <strong className="text-[#f3f4f8]">Explanation:</strong>
+                <pre className="mt-1 whitespace-pre-wrap break-words text-[#c6cbd8]">
                   {formatValue(item.explanation)}
                 </pre>
               </div>

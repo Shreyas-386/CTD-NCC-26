@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbe3c3"/>
+      <stop offset="55%" stop-color="#e8b57d"/>
+      <stop offset="100%" stop-color="#c98d55"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0b1730"/>
+  <!-- slash pair, top-left -->
+  <line x1="7" y1="18" x2="14" y2="7" stroke="#3a4a72" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="12" y1="18" x2="19" y2="7" stroke="#e8b57d" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- slash pair, bottom-right -->
+  <line x1="45" y1="57" x2="52" y2="46" stroke="#3a4a72" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="50" y1="57" x2="57" y2="46" stroke="#e8b57d" stroke-width="2.6" stroke-linecap="round"/>
+  <text x="32" y="41" text-anchor="middle" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="22" letter-spacing="-0.5" fill="url(#g)">NCC</text>
+</svg>

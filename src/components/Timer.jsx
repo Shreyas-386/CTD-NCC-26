@@ -1,6 +1,7 @@
 import api from "../api/axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiClock } from "react-icons/fi";
 
 
 function EventTimer() {
@@ -46,8 +47,9 @@ function EventTimer() {
   // if (remainingMs === null) return <p></p>;
 
   return (
-    <div className="bg-gradient-to-r from-[#FFE7A3] to-[#B8832F] text-[#0E0D40] font-semibold rounded-full px-4 py-2 shadow-[0_4px_0_#0D1026] border-2 border-[#FFE7A3] hover:shadow-[0_2px_0_#0D1026] hover:-translate-y-1 hover:scale-105 transition-all duration-300">
-      <p className="font-bold tracking-wide">{remainingMs == 0 ? <span>Loading...</span> : formatRemainingTime(remainingMs)}</p>
+    <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 ncc-glass text-[#eef0f5]">
+      <FiClock className="text-[#e8b57d]" />
+      <p className="font-poppins font-semibold text-sm tracking-wide tabular-nums">{remainingMs == 0 ? <span>Loading...</span> : formatRemainingTime(remainingMs)}</p>
     </div>
   );
 }

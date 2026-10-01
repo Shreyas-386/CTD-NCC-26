@@ -11,24 +11,24 @@ const SubmitCodeBox = ({ code, onClose, Language }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="relative bg-[#1F1F2E] text-white p-6 rounded-xl w-full max-w-3xl shadow-2xl border border-[#444466]">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-[#05070d]/75 backdrop-blur-sm px-4">
+      <div className="relative bg-[#141927] text-[#eef0f5] p-6 rounded-2xl w-full max-w-3xl shadow-2xl border border-white/10">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3  right-3 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm font-semibold shadow-md transition-colors font-play"
+          className="absolute top-4 right-4 px-4 py-1.5 rounded-lg text-sm font-semibold font-poppins border border-white/20 text-[#eef0f5] hover:border-[#e8b57d] hover:text-[#e8b57d] transition-colors"
         >
           Close
         </button>
-        <div className="relative  text-white font-semibold mb-2 font-play">
+        <div className="relative font-exo font-semibold text-lg text-[#e8b57d] uppercase tracking-wide">
           {Language || "Code"}
         </div>
 
         {/* Code block */}
-        <div className="bg-[#2A2A40] flex flex-col p-5 rounded-lg overflow-auto max-h-[70vh] border border-[#555577] shadow-inner mt-5">
+        <div className="bg-[#0f1320] flex flex-col p-5 rounded-xl overflow-auto max-h-[70vh] border border-white/10 shadow-inner mt-5 ncc-scroll">
 
 
-          <pre className="whitespace-pre-wrap break-words font-play text-sm sm:text-base">
+          <pre className="whitespace-pre-wrap break-words font-code text-sm text-[#d7dbe5]">
             <code>{decodedCode}</code>
           </pre>
         </div>
