@@ -1,0 +1,311 @@
+/* 1. import fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* 2. import tailwind */
+@import "tailwindcss";
+
+/* 3. define theme tokens */
+@theme {
+  --font-play: "Play";
+  --font-stranger: "StrangerDoctor";
+  --font-inter: "Inter";
+}
+
+/* 4. base layer styles */
+@font-face {
+  font-family: 'StrangerDoctor';
+  src: url('/fonts/StrangerDoctor.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0d1528;
+  color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Play', 'Inter', sans-serif;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #141c2e; }
+::-webkit-scrollbar-thumb { background: #E8B86D; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C49A3C; }
+
+/* ===================================================
+   NCC DESIGN SYSTEM
+   =================================================== */
+
+/* ---- Page wrapper ---- */
+.ncc-page {
+  position: relative;
+  min-height: 100vh;
+  background-color: #0d1528;
+  overflow-x: hidden;
+}
+
+/* ---- Background blobs ---- */
+.ncc-blob-gold {
+  position: fixed;
+  bottom: -140px;
+  left: -110px;
+  width: 560px;
+  height: 480px;
+  background: radial-gradient(
+    ellipse 68% 58% at 38% 58%,
+    rgba(175, 108, 18, 0.38) 0%,
+    rgba(130, 72, 8, 0.22) 55%,
+    transparent 82%
+  );
+  border-radius: 56% 44% 68% 32% / 44% 60% 40% 56%;
+  pointer-events: none;
+  z-index: 0;
+  animation: blob-drift 14s ease-in-out infinite alternate;
+}
+
+.ncc-blob-purple {
+  position: fixed;
+  bottom: -90px;
+  right: -130px;
+  width: 520px;
+  height: 460px;
+  background: radial-gradient(
+    ellipse 68% 58% at 58% 52%,
+    rgba(88, 28, 118, 0.48) 0%,
+    rgba(55, 14, 88, 0.28) 55%,
+    transparent 82%
+  );
+  border-radius: 44% 56% 34% 66% / 56% 32% 68% 44%;
+  pointer-events: none;
+  z-index: 0;
+  animation: blob-drift 17s ease-in-out infinite alternate-reverse;
+}
+
+.ncc-blob-purple-top {
+  position: fixed;
+  top: -110px;
+  right: 80px;
+  width: 380px;
+  height: 320px;
+  background: radial-gradient(ellipse at center, rgba(68, 18, 100, 0.38) 0%, transparent 72%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ncc-blob-gold-left {
+  position: fixed;
+  top: 28%;
+  left: -90px;
+  width: 240px;
+  height: 320px;
+  background: radial-gradient(ellipse at center, rgba(155, 88, 12, 0.3) 0%, transparent 72%);
+  border-radius: 40% 60% 50% 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes blob-drift {
+  0%   { transform: scale(1) translate(0px, 0px); }
+  100% { transform: scale(1.07) translate(18px, -14px); }
+}
+
+/* ---- Dot grid pattern ---- */
+.ncc-dots {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  background-image: radial-gradient(circle, rgba(232, 184, 109, 0.42) 1.5px, transparent 1.5px);
+  background-size: 13px 13px;
+  pointer-events: none;
+}
+
+/* ---- Cards ---- */
+.ncc-card {
+  background: #141c2e;
+  border: 1px solid rgba(232, 184, 109, 0.14);
+  border-radius: 16px;
+}
+.ncc-card-hover {
+  transition: all 0.25s ease;
+}
+.ncc-card-hover:hover {
+  border-color: rgba(232, 184, 109, 0.38);
+  box-shadow: 0 4px 28px rgba(232, 184, 109, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ---- Buttons ---- */
+.ncc-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #E8B86D 0%, #C49A3C 100%);
+  color: #0d1528;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 13px 32px;
+  font-size: 15px;
+  letter-spacing: 0.4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  font-family: 'Play', sans-serif;
+  text-decoration: none;
+}
+.ncc-btn-gold:hover {
+  background: linear-gradient(135deg, #F5D08A 0%, #D4AA50 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(232, 184, 109, 0.38);
+}
+.ncc-btn-gold:active { transform: translateY(0); }
+.ncc-btn-gold:disabled { opacity: 0.52; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.ncc-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: #E8B86D;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 11px 26px;
+  font-size: 14px;
+  border: 1.5px solid #E8B86D;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  font-family: 'Play', sans-serif;
+  text-decoration: none;
+}
+.ncc-btn-outline:hover {
+  background: rgba(232, 184, 109, 0.1);
+  box-shadow: 0 0 16px rgba(232, 184, 109, 0.22);
+}
+
+.ncc-btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #1a2235;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 11px 26px;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: all 0.22s ease;
+  font-family: 'Play', sans-serif;
+  text-decoration: none;
+}
+.ncc-btn-dark:hover { background: #1f2a42; border-color: rgba(255,255,255,0.24); }
+.ncc-btn-dark:disabled { opacity: 0.52; cursor: not-allowed; }
+
+/* ---- Inputs ---- */
+.ncc-input {
+  background: #1a2235;
+  border: 1px solid rgba(232, 184, 109, 0.2);
+  border-radius: 10px;
+  padding: 13px 16px 13px 46px;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Play', sans-serif;
+}
+.ncc-input:focus {
+  border-color: rgba(232, 184, 109, 0.58);
+  box-shadow: 0 0 0 3px rgba(232, 184, 109, 0.08);
+}
+.ncc-input::placeholder { color: rgba(128, 144, 176, 0.65); }
+
+/* ---- Circular progress ---- */
+.ncc-circle-track  { fill: none; stroke: #1e2a3a; stroke-width: 7; }
+.ncc-circle-progress {
+  fill: none;
+  stroke: #E8B86D;
+  stroke-width: 7;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+/* ---- Glow animation (submission success) ---- */
+@keyframes glow-ring {
+  0%, 100% { box-shadow: 0 0 18px rgba(232,184,109,0.45), 0 0 50px rgba(232,184,109,0.18); }
+  50%       { box-shadow: 0 0 36px rgba(232,184,109,0.75), 0 0 80px rgba(232,184,109,0.32); }
+}
+.ncc-glow-ring { animation: glow-ring 2.4s ease-in-out infinite; }
+
+/* ---- Confetti ---- */
+@keyframes confetti-fall {
+  0%   { transform: translateY(-30px) rotate(0deg);    opacity: 1; }
+  100% { transform: translateY(110vh) rotate(760deg);  opacity: 0; }
+}
+.ncc-confetti-piece {
+  position: fixed;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation: confetti-fall linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ---- Donut chart ---- */
+.ncc-donut-track { fill: none; stroke: #1e2a3a; stroke-width: 14; }
+.ncc-donut-arc {
+  fill: none;
+  stroke: url(#donutGold);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.2s ease-out;
+}
+
+/* ---- Slash headings ---- */
+.ncc-slash-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: 'Play', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+}
+.ncc-slash-heading .slash {
+  color: #E8B86D;
+  font-size: 0.72em;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* ---- Code textarea ---- */
+.ncc-code-textarea {
+  background: #111827;
+  border: 1px solid rgba(232, 184, 109, 0.18);
+  border-radius: 10px;
+  padding: 12px;
+  color: #e2e8f0;
+  font-size: 13px;
+  width: 100%;
+  resize: none;
+  outline: none;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  transition: border-color 0.2s ease;
+}
+.ncc-code-textarea:focus { border-color: rgba(232, 184, 109, 0.5); }
+.ncc-code-textarea::placeholder { color: rgba(128, 144, 176, 0.55); }
+
+/* ---- Toast ---- */
+.Toastify__toast-container { z-index: 99999 !important; }
