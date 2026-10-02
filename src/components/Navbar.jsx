@@ -34,18 +34,19 @@ const Navbar = ({ variant = "default" }) => {
   const menuRef = useRef(null);
 
   const handleLogout = async () => {
-    for (let i = localStorage.length - 1; i >= 0; i--) {
-      const key = localStorage.key(i);
-      if (!key.startsWith("solved_")) {
-        localStorage.removeItem(key);
+    try {
+      await api.post(`/user/logout`, {});
+    } catch (err) {
+      console.error("Error during logout request:", err);
+    } finally {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (!key.startsWith("solved_")) {
+          localStorage.removeItem(key);
+        }
       }
+      navigate("/");
     }
-    await api.post(
-      `/user/logout`,
-      {}
-    );
-
-    navigate("/");
   };
 
   // close the avatar menu when clicking outside it
