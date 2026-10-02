@@ -4,7 +4,7 @@ import apis from "../config/api.json"
 
 
 const api = axios.create({
-    baseURL: apis.BASE_URL,
+    baseURL: import.meta.env.VITE_API_BASE_URL || apis.BASE_URL,
     withCredentials: true,
 });
 

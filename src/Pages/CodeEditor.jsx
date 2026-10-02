@@ -10,7 +10,7 @@ import Submissions from "../components/Submissions";
 import Timer from "../components/Timer";
 import { toast } from "react-toastify";
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 function encodeBase64(str) {
   const encoder = new TextEncoder();
@@ -134,156 +134,156 @@ public class Main {
     return () => clearTimeout(timer);
   }, [code, question, language]);
 
-//fetch question
-useEffect(() => {
-  if (!questionIndex) return;
-  const fetchQuestion = async () => {
+  //fetch question
+  useEffect(() => {
+    if (!questionIndex) return;
+    const fetchQuestion = async () => {
+      try {
+        const res = await api.get(
+          `/problems/${questionIndex}`
+        );
+        // console.log(res.data.id);
+        setQuestion(res.data);
+
+      } catch (err) {
+        if (err?.response?.status === 403) {
+          navigate("/results");
+          return;
+        }
+        toast.error("Something went wrong", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        console.error("Error fetching question:", err);
+      }
+    };
+    fetchQuestion();
+  }, [questionIndex]);
+
+  // Run code
+  const runCode = async () => {
+    setIsRunning(true);
+    setOutput(null);
+    setSubmitResult(null);
+
+    const payload = {
+      code: encodeBase64(code),
+      customTestcase: encodeBase64(customInput),
+      language,
+      problem_id: question?.id || 1,
+      event_id: 2,
+    };
+
     try {
-      const res = await api.get(
-        `/problems/${questionIndex}`
+      const res = await api.post(`/submission/run`, payload);
+
+      subscribeToSubmission(res.data.submission_id, (data) => {
+        if (data.user_output) {
+          setOutput(data.user_output);
+        } else {
+          setOutput(`${data.status} : ${data.message}`);
+        }
+
+        setIsRunning(false);
+      }, activeStreamsRef.current);
+    } catch (err) {
+      if (err?.response?.status === 403) {
+        navigate("/results");
+        return;
+      }
+      setOutput("Error: " + (err.response?.data?.message || err.message));
+      setIsRunning(false);
+    }
+  };
+
+  const submitCode = async () => {
+    setIsSubmitting(true);
+    setOutput(null);
+    setSubmitResult(null);
+
+    try {
+      const res = await api.post(
+        `/submission/submit`,
+        {
+          code: encodeBase64(code),
+          language,
+          problem_id: question?.id || 1,
+          event_id: 2,
+        }
       );
-      // console.log(res.data.id);
-      setQuestion(res.data);
+
+      subscribeToSubmission(res.data.submission_id, (data) => {
+        const parsedData = {
+          status: data.status || "unknown",
+          message: data.message || "",
+          failed_test_case: parseInt(data.failed_test_case ?? "0", 10),
+          total_test_case: parseInt(data.total_test_case ?? "0", 10),
+          score: parseInt(data.score ?? "0", 10),
+        };
+
+        setSubmitResult(parsedData);
+
+        if (
+          parsedData.status === "accepted" &&
+          !localStorage.getItem(`solved_${questionIndex}`)
+        ) {
+          localStorage.setItem(`solved_${questionIndex}`, "solved");
+        }
+        setIsSubmitting(false)
+      }, activeStreamsRef.current);
 
     } catch (err) {
       if (err?.response?.status === 403) {
         navigate("/results");
         return;
       }
+
+      console.error(err);
+
       toast.error("Something went wrong", {
         position: "top-center",
         autoClose: 2000,
       });
-      console.error("Error fetching question:", err);
+      setIsSubmitting(false);
     }
   };
-  fetchQuestion();
-}, [questionIndex]);
 
-// Run code
-const runCode = async () => {
-  setIsRunning(true);
-  setOutput(null);
-  setSubmitResult(null);
+  const machineRun = async () => {
+    setMachineOutput(null);
+    setIsMachineRun(true);
+    setLastInput(machineInput);
 
-  const payload = {
-    code: encodeBase64(code),
-    customTestcase: encodeBase64(customInput),
-    language,
-    problem_id: question?.id || 1,
-    event_id: 2,
-  };
+    const payload = {
+      customTestcase: encodeBase64(machineInput),
+      problem_id: question?.id || 1,
+      event_id: 2,
+    };
 
-  try {
-    const res = await api.post(`/submission/run`, payload);
-
-    subscribeToSubmission(res.data.submission_id, (data) => {
-      if (data.user_output) {
-        setOutput(data.user_output);
-      } else {
-        setOutput(`${data.status} : ${data.message}`);
-      }
-
-      setIsRunning(false);
-    }, activeStreamsRef.current);
-  } catch (err) {
-    if (err?.response?.status === 403) {
-      navigate("/results");
-      return;
-    }
-    setOutput("Error: " + (err.response?.data?.message || err.message));
-    setIsRunning(false);
-  }
-};
-
-const submitCode = async () => {
-  setIsSubmitting(true);
-  setOutput(null);
-  setSubmitResult(null);
-
-  try {
-    const res = await api.post(
-      `/submission/submit`,
-      {
-        code: encodeBase64(code),
-        language,
-        problem_id: question?.id || 1,
-        event_id: 2,
-      }
-    );
-
-    subscribeToSubmission(res.data.submission_id, (data) => {
-      const parsedData = {
-        status: data.status || "unknown",
-        message: data.message || "",
-        failed_test_case: parseInt(data.failed_test_case ?? "0", 10),
-        total_test_case: parseInt(data.total_test_case ?? "0", 10),
-        score: parseInt(data.score ?? "0", 10),
-      };
-
-      setSubmitResult(parsedData);
-
-      if (
-        parsedData.status === "accepted" &&
-        !localStorage.getItem(`solved_${questionIndex}`)
-      ) {
-        localStorage.setItem(`solved_${questionIndex}`, "solved");
-      }
-      setIsSubmitting(false)
-    }, activeStreamsRef.current);
-
-  } catch (err) {
-    if (err?.response?.status === 403) {
-      navigate("/results");
-      return;
-    }
-
-    console.error(err);
-
-    toast.error("Something went wrong", {
-      position: "top-center",
-      autoClose: 2000,
-    });
-    setIsSubmitting(false);
-  }
-};
-
-const machineRun = async () => {
-  setMachineOutput(null);
-  setIsMachineRun(true);
-  setLastInput(machineInput);
-
-  const payload = {
-    customTestcase: encodeBase64(machineInput),
-    problem_id: question?.id || 1,
-    event_id: 2,
-  };
-
-  try {
-    const res = await api.post(
-      `/submission/run-system`,
-      payload
-    );
-
-    subscribeToSubmission(res.data.submission_id, (data) => {
-      setMachineOutput(
-        data.user_output
-          ? data.user_output
-          : `${data.status} : ${data.message}`
+    try {
+      const res = await api.post(
+        `/submission/run-system`,
+        payload
       );
 
-      setIsMachineRun(false);
-    }, activeStreamsRef.current);
+      subscribeToSubmission(res.data.submission_id, (data) => {
+        setMachineOutput(
+          data.user_output
+            ? data.user_output
+            : `${data.status} : ${data.message}`
+        );
 
-  } catch (err) {
-    if (err?.response?.status === 403) {
-      navigate("/results");
-      return;
+        setIsMachineRun(false);
+      }, activeStreamsRef.current);
+
+    } catch (err) {
+      if (err?.response?.status === 403) {
+        navigate("/results");
+        return;
+      }
+      setMachineOutput("Error: " + (err.response?.data?.message || err.message));
+      setIsMachineRun(false);
     }
-    setMachineOutput("Error: " + (err.response?.data?.message || err.message));
-    setIsMachineRun(false);
-  }
-};
+  };
 
   //fetch submissions
   const fetchSubmissions = async () => {
@@ -535,53 +535,53 @@ const machineRun = async () => {
               )}
             </div>
 
-          {/* set this false for NCC else true for RC */}
-          {false && (
-            <>
-          {/* Test Case Section */}
-          <div className="flex flex-col border-2 border-[#c29673] rounded-lg p-4 bg-[#1a1625]/90 shadow-md text-white gap-3">
-            <div className="text-lg font-semibold text-[#FFE7A3] font-play">
-              Test Case
-            </div>
+            {/* set this false for NCC else true for RC */}
+            {false && (
+              <>
+                {/* Test Case Section */}
+                <div className="flex flex-col border-2 border-[#c29673] rounded-lg p-4 bg-[#1a1625]/90 shadow-md text-white gap-3">
+                  <div className="text-lg font-semibold text-[#FFE7A3] font-play">
+                    Test Case
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Input Box */}
-              <div className="flex flex-col font-play">
-                <label className="text-sm text-[#e6d4b3] mb-1 font-play">Input</label>
-                <textarea
-                  className="bg-[#231f2f] border border-[#c29673] rounded-md p-3 text-white placeholder-[#e6d4b3]/50 focus:outline-none focus:ring-2 focus:ring-[#FFE7A3] focus:border-[#FFE7A3] resize-none font-play"
-                  rows={5}
-                  value={machineInput}
-                  onChange={(e) => setMachineInput(e.target.value)}
-                  placeholder="Enter input here"
-                ></textarea>
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Input Box */}
+                    <div className="flex flex-col font-play">
+                      <label className="text-sm text-[#e6d4b3] mb-1 font-play">Input</label>
+                      <textarea
+                        className="bg-[#231f2f] border border-[#c29673] rounded-md p-3 text-white placeholder-[#e6d4b3]/50 focus:outline-none focus:ring-2 focus:ring-[#FFE7A3] focus:border-[#FFE7A3] resize-none font-play"
+                        rows={5}
+                        value={machineInput}
+                        onChange={(e) => setMachineInput(e.target.value)}
+                        placeholder="Enter input here"
+                      ></textarea>
+                    </div>
 
-              {/* Output Display Box */}
-              <div className="flex flex-col font-play">
-                <label className="text-sm text-[#e6d4b3] mb-1 font-play">
-                  Expected Output
-                </label>
-                <div className="bg-[#231f2f] border border-[#c29673] rounded-md p-3 text-white h-[120px] overflow-auto font-play">
-                  {machineOutput}
-                </div>
-              </div>
-            </div>
+                    {/* Output Display Box */}
+                    <div className="flex flex-col font-play">
+                      <label className="text-sm text-[#e6d4b3] mb-1 font-play">
+                        Expected Output
+                      </label>
+                      <div className="bg-[#231f2f] border border-[#c29673] rounded-md p-3 text-white h-[120px] overflow-auto font-play">
+                        {machineOutput}
+                      </div>
+                    </div>
+                  </div>
 
 
-            <div className="relative group inline-block w-full">
-              <button
-                disabled={isMachineRun || lastInput === machineInput || machineInput === ""}
-                className="w-full mt-3 bg-gradient-to-r from-[#FFE7A3] to-[#B8832F] text-[#0E0D40] font-semibold py-2 px-4 rounded-lg shadow-[0_4px_0_#0D1026] border-2 border-[#FFE7A3] hover:shadow-[0_2px_0_#0D1026] transition-all duration-300 disabled:from-[#6b5d4a] disabled:to-[#4a4135] disabled:text-[#e6d4b3]/50 disabled:border-[#6b5d4a] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-[0_4px_0_#0D1026] font-play"
-                onClick={machineRun}
-              >
-                Machine Run
-              </button>
+                  <div className="relative group inline-block w-full">
+                    <button
+                      disabled={isMachineRun || lastInput === machineInput || machineInput === ""}
+                      className="w-full mt-3 bg-gradient-to-r from-[#FFE7A3] to-[#B8832F] text-[#0E0D40] font-semibold py-2 px-4 rounded-lg shadow-[0_4px_0_#0D1026] border-2 border-[#FFE7A3] hover:shadow-[0_2px_0_#0D1026] transition-all duration-300 disabled:from-[#6b5d4a] disabled:to-[#4a4135] disabled:text-[#e6d4b3]/50 disabled:border-[#6b5d4a] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-[0_4px_0_#0D1026] font-play"
+                      onClick={machineRun}
+                    >
+                      Machine Run
+                    </button>
 
-              {/* Tooltip */}
-              {(isMachineRun || lastInput === machineInput || machineInput === "") && (
-                <span
-                  className="
+                    {/* Tooltip */}
+                    {(isMachineRun || lastInput === machineInput || machineInput === "") && (
+                      <span
+                        className="
         pointer-events-none
         absolute left-1/2 -translate-x-1/2 bottom-full mb-2
         px-3 py-1
@@ -595,22 +595,22 @@ const machineRun = async () => {
         shadow-lg
         font-play
       "
-                >
-                  {machineInput === ""
-                    ? "Enter input to enable Machine Run"
-                    : lastInput === machineInput
-                      ? "Change input to enable Machine Run"
-                      : isMachineRun
-                        ? "Machine is already running"
-                        : ""}
-                </span>
-              )}
-            </div>
+                      >
+                        {machineInput === ""
+                          ? "Enter input to enable Machine Run"
+                          : lastInput === machineInput
+                            ? "Change input to enable Machine Run"
+                            : isMachineRun
+                              ? "Machine is already running"
+                              : ""}
+                      </span>
+                    )}
+                  </div>
 
 
-          </div>
-            </>
-          )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Drag handle between the halves (desktop only) */}
