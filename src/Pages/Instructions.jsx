@@ -62,11 +62,14 @@ const DocumentArt = () => (
   </svg>
 );
 
-const InstructionItem = ({ number, text }) => {
+const InstructionItem = ({ number, text, index = 0 }) => {
   return (
-    <div className="w-full flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl ncc-glass hover:border-[#e8b57d]/40 transition-colors duration-300">
+    <div
+      className="ncc-rise group w-full flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl ncc-glass hover:border-[#e8b57d]/40 hover:-translate-y-0.5 transition-[border-color,transform] duration-300"
+      style={{ "--d": `${200 + index * 90}ms` }}
+    >
       {/* Number */}
-      <div className="shrink-0 w-11 h-11 sm:w-14 sm:h-14 rounded-full ncc-gold-btn flex items-center justify-center">
+      <div className="shrink-0 w-11 h-11 sm:w-14 sm:h-14 rounded-full ncc-gold-btn transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg] flex items-center justify-center">
         <span className="font-exo font-bold text-base sm:text-xl text-[#1a1410]">{number}</span>
       </div>
 
@@ -85,17 +88,19 @@ const Instructions = () => {
       <Navbar />
 
       <div className="relative z-10 flex flex-col items-center px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <h1 className="font-exo font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-wide text-[#f3f4f8] text-center">
+        <h1 className="ncc-rise font-exo font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-wide text-[#f3f4f8] text-center">
           INSTRUCTIONS
         </h1>
-        <p className="mt-3 text-sm sm:text-base text-[#d4d8e2] text-center">
+        <p className="ncc-rise mt-3 text-sm sm:text-base text-[#d4d8e2] text-center" style={{ "--d": "80ms" }}>
           Read the rules carefully before you begin. Good luck!
         </p>
 
         <div className="w-full max-w-5xl mt-8 sm:mt-10 flex flex-row items-center gap-10">
           {/* Illustration */}
           <div className="hidden lg:flex w-[30%] justify-center items-center">
-            <DocumentArt />
+            <div className="ncc-float">
+              <DocumentArt />
+            </div>
           </div>
 
           {/* Instructions list */}
@@ -112,8 +117,8 @@ const Instructions = () => {
         </div>
 
         {/* PROCEED Button */}
-        <Link to="/questionhub" className="mt-8 sm:mt-10">
-          <button className="ncc-gold-btn px-7 sm:px-10 py-3 sm:py-4 rounded-xl font-poppins font-semibold text-base sm:text-lg">
+        <Link to="/questionhub" className="ncc-rise mt-8 sm:mt-10" style={{ "--d": `${250 + instructionsData.length * 90}ms` }}>
+          <button className="ncc-gold-btn ncc-glow px-7 sm:px-10 py-3 sm:py-4 rounded-xl font-poppins font-semibold text-base sm:text-lg">
             I Understand and Proceed
           </button>
         </Link>

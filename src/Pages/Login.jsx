@@ -167,12 +167,14 @@ const Login = () => {
       <div className="relative z-10 flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 flex items-center justify-center lg:justify-between gap-10">
         {/* ILLUSTRATION */}
         <div className="hidden lg:flex relative flex-1 justify-center max-h-full">
-          <LaptopArt />
+          <div className="ncc-float w-full flex justify-center">
+            <LaptopArt />
+          </div>
           <DotGrid rows={4} cols={5} gap={14} className="absolute bottom-[14%] right-[6%]" />
         </div>
 
         {/* FORM CARD */}
-        <div className="w-full max-w-md p-6 sm:p-10 rounded-2xl bg-[#0f1c38]/75 border border-[#2c3c63] backdrop-blur-md shadow-[0_30px_60px_rgba(0,0,0,0.45)]">
+        <div className="ncc-rise w-full max-w-md p-6 sm:p-10 rounded-2xl bg-[#0f1c38]/75 border border-[#2c3c63] backdrop-blur-md shadow-[0_30px_60px_rgba(0,0,0,0.45)]">
           <h1 className="text-3xl sm:text-4xl font-bold text-[#f2f3f7] mb-8 sm:mb-10">Login</h1>
 
           <form className="space-y-5 sm:space-y-6 w-full" onSubmit={handleSubmit}>

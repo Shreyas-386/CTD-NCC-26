@@ -54,9 +54,9 @@ const Submissions = ({ userSubmissions }) => {
           ))
         ) : (
           <div className="text-center py-8 rounded-xl ncc-glass font-poppins">
-            <p className="text-base text-[#e8b57d] font-semibold">No submissions yet.</p>
+            <p className="text-base text-[#e8b57d] font-semibold">No submissions yet 🚀</p>
             <p className="text-sm mt-2 text-[#9aa3b5]">
-              Your code submissions will appear here once you start solving problems.
+              Your first one is the hardest. Submit something and it'll show up right here!
             </p>
           </div>
         )}

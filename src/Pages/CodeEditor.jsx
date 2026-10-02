@@ -44,6 +44,19 @@ function subscribeToSubmission(submissionId, onResult, activeStreams) {
   };
 }
 
+// friendly one-liners shown under a submit result (cycled per submission)
+const ACCEPTED_LINES = [
+  "Clean solve! 🎉 Go grab the next one.",
+  "Boom. All test cases down. 💥",
+  "Look at you, writing correct code! ✨",
+];
+const WRONG_LINES = [
+  "So close! Double-check your edge cases 👀",
+  "Not yet, but every bug is a lesson. Try again! 💪",
+  "Tip: what happens with the smallest and largest inputs? 🤔",
+  "Breathe, re-read the problem, and run a custom input. You've got this 🧠",
+];
+
 const CodeEditor = () => {
   const languages = ["python", "java", "cpp"];
   const [language, setLanguage] = useState("python");
@@ -326,6 +339,14 @@ const machineRun = async () => {
 
   const isAccepted = submitResult?.status?.toLowerCase() === "accepted";
 
+  // ---- result feedback animations (UI only) ----
+  // resultSeq re-mounts the result card so its entrance/shake replays for every new result
+  const [resultSeq, setResultSeq] = useState(0);
+  useEffect(() => {
+    if (!submitResult) return;
+    setResultSeq((n) => n + 1);
+  }, [submitResult]);
+
   // ---- reset code (confirm first) ----
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
@@ -408,7 +429,7 @@ const machineRun = async () => {
 
               {activeTab === "TestCases" && (
                 submitResult ? (
-                  <div>
+                  <div key={resultSeq} className={isAccepted ? "ncc-pop" : "ncc-shake"}>
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div
@@ -479,6 +500,12 @@ const machineRun = async () => {
                       )}
                     </div>
 
+                    <p className={`mt-4 text-sm font-medium ${isAccepted ? "text-[#8fe3ae]" : "text-[#e8b57d]"}`}>
+                      {isAccepted
+                        ? ACCEPTED_LINES[resultSeq % ACCEPTED_LINES.length]
+                        : WRONG_LINES[resultSeq % WRONG_LINES.length]}
+                    </p>
+
                     <button
                       className="mt-5 px-5 py-2 rounded-xl border border-white/25 text-sm font-semibold text-[#eef0f5] hover:border-[#e8b57d] hover:text-[#e8b57d] transition"
                       onClick={() => setSubmitResult(null)} // or your close handler
@@ -495,8 +522,8 @@ const machineRun = async () => {
                       </>
                     ) : (
                       <>
-                        <p className="text-[#e8b57d] font-semibold font-exo text-lg">No results yet</p>
-                        <p className="text-sm text-[#9aa3b5]">Submit your code to see how it does on each test case.</p>
+                        <p className="text-[#e8b57d] font-semibold font-exo text-lg">Nothing submitted yet 🚀</p>
+                        <p className="text-sm text-[#9aa3b5]">The first submission is always the scariest. Hit Submit and see how you do on each test case!</p>
                       </>
                     )}
                   </div>
@@ -763,7 +790,7 @@ const machineRun = async () => {
             aria-labelledby="reset-title"
             aria-describedby="reset-desc"
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-2xl p-6 bg-[#141927] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.55)]"
+            className="ncc-pop w-full max-w-sm rounded-2xl p-6 bg-[#141927] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.55)]"
           >
             <div className="flex items-start gap-4">
               <div className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-[#e8b57d]/15 text-[#e8b57d]">

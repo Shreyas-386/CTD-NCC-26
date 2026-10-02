@@ -77,7 +77,7 @@ function Leaderboard() {
 
       <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 flex flex-col py-8 sm:py-10">
         {/* Title Section */}
-        <div className="w-full flex items-center justify-center gap-3 sm:gap-5">
+        <div className="ncc-rise w-full flex items-center justify-center gap-3 sm:gap-5">
           <Slashes className="w-8 h-8 sm:w-11 sm:h-11" />
           <h1 className="font-exo text-3xl sm:text-4xl lg:text-5xl leading-tight font-extrabold tracking-wide text-[#f3f1ec] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
             LEADERBOARD
@@ -85,8 +85,52 @@ function Leaderboard() {
           <Slashes className="w-8 h-8 sm:w-11 sm:h-11" />
         </div>
 
+        {/* Podium: overall top 3 */}
+        {sortedData.length > 0 && (
+          <div className="mt-8 sm:mt-10 flex items-end justify-center gap-2 sm:gap-4">
+            {[1, 0, 2].map((i) => {
+              const s = sortedData[i];
+              if (!s) return null;
+              const rank = i + 1;
+              const height = rank === 1 ? "h-24 sm:h-32" : rank === 2 ? "h-16 sm:h-24" : "h-12 sm:h-16";
+              const tone =
+                rank === 1
+                  ? "from-[#f4cc9a] to-[#c98d55] text-[#1a1410]"
+                  : rank === 2
+                    ? "from-[#e3e8f4] to-[#9aa7c4] text-[#14203a]"
+                    : "from-[#e0a46d] to-[#a8693a] text-[#1a1410]";
+
+              return (
+                <div
+                  key={s.username}
+                  className="ncc-rise flex flex-col items-center w-[28%] max-w-[170px]"
+                  style={{ "--d": `${250 + (3 - rank) * 150}ms` }}
+                >
+                  {rank === 1 ? (
+                    <FaCrown className="ncc-bob text-[#e8b57d] text-2xl sm:text-3xl mb-1 drop-shadow-[0_0_8px_rgba(232,181,125,0.7)]" />
+                  ) : (
+                    <FaMedal className={`text-xl sm:text-2xl mb-1 ${rank === 2 ? "text-[#d3d9e8]" : "text-[#d79c62]"}`} />
+                  )}
+                  <div className="w-full text-center truncate font-semibold uppercase text-xs sm:text-sm text-[#f3f4f8]">
+                    {s.username}
+                  </div>
+                  <div className="font-exo font-bold text-sm sm:text-base text-[#e8b57d] mb-2">{s.total} pts</div>
+                  <div
+                    className={`w-full ${height} rounded-t-xl bg-gradient-to-b ${tone} flex items-start justify-center pt-2 font-exo font-extrabold text-2xl sm:text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.35)]`}
+                  >
+                    {rank}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Leaderboard Container */}
-        <div className="mt-6 sm:mt-8 flex flex-col rounded-2xl p-3 sm:p-5 bg-[#0d1a36]/70 border border-[#2b3c66]/70 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
+        <div
+          className="ncc-rise mt-6 sm:mt-8 flex flex-col rounded-2xl p-3 sm:p-5 bg-[#0d1a36]/70 border border-[#2b3c66]/70 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+          style={{ "--d": "120ms" }}
+        >
           {/* Table Body with scroll */}
           <div className="overflow-x-auto ncc-scroll rounded-xl border border-[#2b3c66]/70">
             <table className="w-full min-w-[640px] table-fixed text-center text-[#e7e9f0] tracking-wide">
@@ -112,7 +156,9 @@ function Leaderboard() {
                   return (
                     <tr
                       key={student.username}
+                      style={{ "--d": `${250 + idx * 70}ms` }}
                       className={`
+                        ncc-rise
                         text-xs sm:text-sm
                         transition-colors duration-200
                         ${idx % 2 === 0 ? "bg-[#13244b]/70" : "bg-transparent"}
@@ -124,8 +170,15 @@ function Leaderboard() {
                       {/* Rank */}
                       <td className="py-4 sm:py-5 font-semibold">
                         <div className="flex items-center justify-center gap-2">
-                          {isFirst && <FaCrown className="text-[#e8b57d] text-base" />}
-                          <span className={isFirst ? "text-[#e8b57d]" : "text-[#e7e9f0]"}>
+                          {isFirst && <FaCrown className="ncc-bob text-[#e8b57d] text-base drop-shadow-[0_0_6px_rgba(232,181,125,0.6)]" />}
+                          <span
+                            className={
+                              isFirst ? "text-[#e8b57d]"
+                                : rank === 2 ? "text-[#d3d9e8]"
+                                  : rank === 3 ? "text-[#d79c62]"
+                                    : "text-[#e7e9f0]"
+                            }
+                          >
                             {rank}
                           </span>
                         </div>
@@ -163,7 +216,7 @@ function Leaderboard() {
             {currentData.length === 0 && (
               <div className="text-center py-10 text-[#9aa7c4] font-poppins">
                 <GiScrollQuill className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                <p>No participants yet</p>
+                <p>It's quiet in here... be the first on the board! 🏁</p>
               </div>
             )}
           </div>

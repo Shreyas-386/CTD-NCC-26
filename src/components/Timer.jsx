@@ -46,9 +46,16 @@ function EventTimer() {
 
   // if (remainingMs === null) return <p></p>;
 
+  // colour-only urgency: the last 5 minutes turn red (no animation, so it doesn't distract)
+  const isUrgent = remainingMs !== null && remainingMs > 0 && remainingMs <= 5 * 60 * 1000;
+
   return (
-    <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 ncc-glass text-[#eef0f5]">
-      <FiClock className="text-[#e8b57d]" />
+    <div
+      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 ncc-glass transition-colors duration-500
+        ${isUrgent ? "text-[#ffb3b3] !border-[#ff6b6b]/50" : "text-[#eef0f5]"}`}
+      title={isUrgent ? "Less than 5 minutes left!" : undefined}
+    >
+      <FiClock className={isUrgent ? "text-[#ff8f8f]" : "text-[#e8b57d]"} />
       <p className="font-poppins font-semibold text-sm tracking-wide tabular-nums">{remainingMs == 0 ? <span>Loading...</span> : formatRemainingTime(remainingMs)}</p>
     </div>
   );

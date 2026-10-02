@@ -94,7 +94,7 @@ const Navbar = ({ variant = "default" }) => {
     );
   }
 
-  const labels = ["Instructions", "Question Hub", "Leaderboards"];
+  const labels = ["Instructions", "Question Hub", "Leaderboard"];
 
   return (
     <div className={`${barBase} bg-[#121725]/70 border-white/10`}>
@@ -133,7 +133,7 @@ const Navbar = ({ variant = "default" }) => {
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 mt-3 w-40 rounded-xl ncc-glass p-1.5">
+          <div className="ncc-pop origin-top-right absolute right-0 mt-3 w-40 rounded-xl ncc-glass p-1.5">
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-poppins text-[#eef0f5] hover:bg-white/5 hover:text-[#e8b57d] transition"

@@ -124,8 +124,10 @@ const QuestionHub = () => {
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center py-8 sm:py-10">
         {/* Heading (centered) + Timer */}
         <div className="relative shrink-0 w-full flex flex-col md:flex-row items-center justify-center gap-3">
-          <div className="flex items-center gap-3 sm:gap-5">
-            <TrophyArt />
+          <div className="ncc-rise flex items-center gap-3 sm:gap-5">
+            <div className="ncc-pop ncc-wiggle-hover cursor-default" style={{ "--d": "150ms" }}>
+              <TrophyArt />
+            </div>
             <div>
               <h1 className="font-exo font-extrabold text-2xl sm:text-4xl lg:text-5xl leading-tight tracking-wide text-[#f3f4f8]">
                 QUESTION HUB
@@ -152,8 +154,9 @@ const QuestionHub = () => {
             return (
               <div
                 key={index}
-                className={`relative flex flex-col items-center gap-3 sm:gap-4 px-3 sm:px-6 py-4 sm:py-6 rounded-2xl ncc-glass cursor-pointer transition-all duration-300
-                  ${isHovered ? "-translate-y-1 border-[#e8b57d]/40" : ""}`}
+                className={`ncc-rise relative flex flex-col items-center gap-3 sm:gap-4 px-3 sm:px-6 py-4 sm:py-6 rounded-2xl ncc-glass cursor-pointer transition-[translate,border-color,box-shadow] duration-300
+                  ${isHovered ? "-translate-y-1.5 border-[#e8b57d]/40 shadow-[0_24px_50px_rgba(0,0,0,0.45),0_0_0_1px_rgba(232,181,125,0.15)]" : ""}`}
+                style={{ "--d": `${200 + index * 100}ms` }}
                 onMouseEnter={() => setHoveredCard(index)}
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => handleQuestionClick(accuracy[index]?.problem_id)}

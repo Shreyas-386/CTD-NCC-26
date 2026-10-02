@@ -7,7 +7,7 @@ import Backdrop from "../components/Backdrop";
 import { Slashes } from "../components/NccLogo";
 import { toast } from "react-toastify";
 
-// Static confetti pieces scattered across the top of the page
+// Confetti pieces [left %, start offset, colour, rotation] that drift down the page
 const CONFETTI = [
   [4, 14, "#e8b57d", 18], [9, 26, "#c86a8a", -22], [13, 8, "#8f86d6", 30], [17, 33, "#e8b57d", 10],
   [22, 18, "#d98aa6", -35], [26, 6, "#6c7aa8", 45], [30, 28, "#f2c693", -12], [35, 12, "#a2508a", 25],
@@ -19,12 +19,19 @@ const CONFETTI = [
 ];
 
 const Confetti = () => (
-  <div className="pointer-events-none absolute inset-x-0 top-0 h-[55%] overflow-hidden" aria-hidden="true">
+  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
     {CONFETTI.map(([left, top, color, rot], i) => (
       <span
         key={i}
-        className={`absolute ${i % 3 === 0 ? "w-2.5 h-2.5 rounded-[2px]" : "w-2 h-4 rounded-[1px]"}`}
-        style={{ left: `${left}%`, top: `${top}%`, background: color, transform: `rotate(${rot}deg)`, opacity: 0.85 }}
+        className={`absolute top-0 ${i % 3 === 0 ? "w-2.5 h-2.5 rounded-[2px]" : "w-2 h-4 rounded-[1px]"}`}
+        style={{
+          left: `${left}%`,
+          background: color,
+          "--r": `${rot}deg`,
+          "--dx": `${(i % 2 ? 1 : -1) * (20 + (i * 7) % 40)}px`,
+          // slow, endless drift; negative delay spreads pieces over the page from the start
+          animation: `ncc-confetti-fall ${9 + (i % 5) * 1.6}s linear ${-(top / 4) - i * 0.37}s infinite`,
+        }}
       />
     ))}
   </div>
@@ -47,9 +54,12 @@ const AvatarArt = () => (
   </div>
 );
 
-const StatTile = ({ icon, value, label }) => (
-  <div className="flex items-start gap-4 px-4 sm:px-5 py-3 sm:py-4 rounded-xl ncc-glass">
-    <span className="text-[#e8b57d] text-2xl mt-0.5">{icon}</span>
+const StatTile = ({ icon, value, label, delay = 0 }) => (
+  <div
+    className="ncc-rise group flex items-start gap-4 px-4 sm:px-5 py-3 sm:py-4 rounded-xl ncc-glass hover:border-[#e8b57d]/40 hover:-translate-y-0.5 transition-[translate,border-color] duration-300"
+    style={{ "--d": `${delay}ms` }}
+  >
+    <span className="text-[#e8b57d] text-2xl mt-0.5 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">{icon}</span>
     <div>
       <div className="font-exo font-bold text-lg sm:text-xl text-[#f3f4f8]">{value}</div>
       <div className="text-xs text-[#a3abbd] mt-0.5">{label}</div>
@@ -91,6 +101,15 @@ const AccuracyDonut = ({ percent }) => {
       </div>
     </div>
   );
+};
+
+// Fun title shown next to the level badge, based on accuracy
+const getTitle = (accuracy, submissions) => {
+  if (!submissions) return "☕ Warming Up";
+  if (accuracy >= 90) return "🥷 Syntax Samurai";
+  if (accuracy >= 70) return "⚔️ Bug Slayer";
+  if (accuracy >= 40) return "🔍 Edge-Case Hunter";
+  return "🌱 Rising Coder";
 };
 
 function Results() {
@@ -139,7 +158,7 @@ function Results() {
       </nav>
 
       {/* RESULT Heading */}
-      <div className="relative z-10 mt-8 sm:mt-10 w-full flex items-center justify-center gap-4">
+      <div className="ncc-rise relative z-10 mt-8 sm:mt-10 w-full flex items-center justify-center gap-4">
         <Slashes className="w-7 h-7 sm:w-9 sm:h-9" />
         <h1 className="font-exo font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-wide text-[#f3f4f8]">
           RESULT
@@ -148,7 +167,7 @@ function Results() {
       </div>
 
       {/* Main Card */}
-      <div className="relative z-10 w-[92%] max-w-4xl mx-auto my-8 sm:my-10 rounded-2xl ncc-glass p-5 sm:p-8 flex flex-col md:flex-row gap-6 sm:gap-8">
+      <div style={{ "--d": "120ms" }} className="ncc-rise relative z-10 w-[92%] max-w-4xl mx-auto my-8 sm:my-10 rounded-2xl ncc-glass p-5 sm:p-8 flex flex-col md:flex-row gap-6 sm:gap-8">
         {/* Left part - User Info + Stats */}
         <div className="flex-1 flex flex-col gap-4">
           <div className="flex items-center gap-5">
@@ -157,17 +176,26 @@ function Results() {
               <div className="font-exo font-bold text-xl sm:text-2xl text-[#f3f4f8]">
                 {`${result.teamname}`}
               </div>
-              <span className="inline-block mt-2 px-4 py-1 rounded-lg text-xs font-medium bg-[#3a3352] text-[#d8d0ec]">
-                {result.isjunior ? "Junior" : "Senior"}
-              </span>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="inline-block px-4 py-1 rounded-lg text-xs font-medium bg-[#3a3352] text-[#d8d0ec]">
+                  {result.isjunior ? "Junior" : "Senior"}
+                </span>
+                <span
+                  className="ncc-pop inline-block px-3 py-1 rounded-lg text-xs font-semibold bg-[#e8b57d]/15 text-[#f4cc9a] border border-[#e8b57d]/30"
+                  style={{ "--d": "700ms" }}
+                  title="Your title, based on your accuracy"
+                >
+                  {getTitle(accuracyPercent, result.total_submissions)}
+                </span>
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <StatTile icon={<FiEdit />} value={result.rank || "-"} label="Your Rank" />
-            <StatTile icon={<FiStar />} value={result.total_score || "-"} label="Total Score" />
-            <StatTile icon={<FiCheckCircle />} value={result.total_submissions || "-"} label="Total Submissions" />
-            <StatTile icon={<FiTarget />} value={formattedAccuracy} label="Accuracy" />
+            <StatTile icon={<FiEdit />} value={result.rank || "-"} label="Your Rank" delay={250} />
+            <StatTile icon={<FiStar />} value={result.total_score || "-"} label="Total Score" delay={340} />
+            <StatTile icon={<FiCheckCircle />} value={result.total_submissions || "-"} label="Total Submissions" delay={430} />
+            <StatTile icon={<FiTarget />} value={formattedAccuracy} label="Accuracy" delay={520} />
           </div>
 
           <Link
