@@ -45,7 +45,7 @@ const Navbar = ({ variant = "default" }) => {
           localStorage.removeItem(key);
         }
       }
-      navigate("/");
+      window.location.href = "/";
     }
   };
 
